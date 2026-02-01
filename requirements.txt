@@ -1,0 +1,7 @@
+Flask
+pandas
+icalendar
+pytz
+gunicorn
+openpyxl
+xlrd>=2.0.1
