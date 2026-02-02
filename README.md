@@ -1,4 +1,7 @@
+<div align="center">
 # 📅 课程表生成器 (Zhengfang Schedule to iCal)
+[Render](https://wmukebiao.onrender.com/) | [Vercel](https://wmukebiao.vercel.app/) | [workers.dev](https://wmukebiao.pkx.workers.dev/)
+</div>
 
 欢迎使用 **课程表生成器**。这是一个专为温州医科大学（及其他使用正方教务系统的高校）同学设计的实用小工具。
 
@@ -28,7 +31,7 @@
 5. 浏览器会依次下载包含课程信息的 **.zip 压缩包** 文件到你的电脑或手机。
 
 ### 第二步：上传转换
-1. 打开本工具官网：[https://wmukebiao.vercel.app/](https://wmukebiao.vercel.app/)。
+1. 打开本工具官网：[https://wmukebiao.vercel.app/](https://wmukebiao.vercel.app/)。打不开可以尝试[https://wmukebiao.onrender.com/](https://wmukebiao.onrender.com/)。
 2. 由于本工具后端部署在Render免费服务上，访问时可能会重新唤醒服务而不是立即打开界面，请耐心等待一段时间。
 3. 点击 **“选择ZIP文件”** 按钮，或者直接把刚才下载的 多个`.zip` 文件拖拽到网页中间的框框里。如果上传了非标准正方教务系统格式的文件，可能会出现解析错误。
 4. 看到文件列表出现后，点击绿色的 **“开始处理”** 按钮。
@@ -143,6 +146,12 @@ A: 可以。如果你在导入时选择了新建日历分类，直接删除该�
 - 感谢 [polacola/timetable](https://github.com/polacola/timetable) 项目的启发与代码参考。
 - 感谢Gemini提供的代码调试与优化建议。
 - 感谢Render提供的免费hosting服务。
+
+---
+
+## 许可证
+
+本项目基于 [MIT License](LICENSE) 开源。你可以在遵守许可证条款的前提下自由使用、修改和分发本项目的代码。
 
 ---
 
