@@ -162,6 +162,29 @@ main {
     padding-bottom: 10px;
 }
 
+.terms-checkbox-container {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.terms-hint {
+    font-size: 0.85rem;
+    color: #888;
+    cursor: pointer;
+}
+
+.terms-hint a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.terms-hint a:hover {
+    text-decoration: underline;
+}
+
 .file-list {
     list-style: none;
     max-height: 200px;
@@ -283,5 +306,31 @@ footer {
     
     .btn {
         width: 100%;
+        margin-bottom: 10px;
     }
+}
+
+/* Disabled state for upload section */
+.upload-section.disabled {
+    background-color: #f9f9f9;
+    border-color: #e0e0e0;
+}
+
+.upload-section.disabled .upload-icon,
+.upload-section.disabled h2,
+.upload-section.disabled p.hint,
+.upload-section.disabled p:nth-of-type(1) { /* Target the 'Or' paragraph */
+    opacity: 0.4;
+}
+
+.upload-section.disabled .btn-primary {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    pointer-events: none;
+    border-color: #bdc3c7;
+}
+
+.upload-section.disabled .terms-checkbox-container {
+    opacity: 1;
+    pointer-events: auto;
 }

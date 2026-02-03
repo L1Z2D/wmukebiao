@@ -13,7 +13,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('error-message');
     const errorText = document.getElementById('error-text');
 
+    const termsCheckbox = document.getElementById('terms-checkbox');
+    const uploadBtn = dropZone.querySelector('.btn-primary');
+
     let selectedFiles = [];
+
+    // UI State Management for Terms Agreement
+    function updateUIState() {
+        if (termsCheckbox.checked) {
+            dropZone.classList.remove('disabled');
+            uploadBtn.removeAttribute('disabled');
+        } else {
+            dropZone.classList.add('disabled');
+            uploadBtn.setAttribute('disabled', 'disabled');
+        }
+    }
+
+    // Initialize UI state
+    updateUIState();
+    termsCheckbox.addEventListener('change', updateUIState);
 
     // Drag and Drop Events
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -34,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function highlight(e) {
+        if (!termsCheckbox.checked) return;
         dropZone.classList.add('dragover');
     }
 
@@ -44,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dropZone.addEventListener('drop', handleDrop, false);
 
     function handleDrop(e) {
+        if (!termsCheckbox.checked) return;
         const dt = e.dataTransfer;
         const files = dt.files;
         handleFiles(files);
@@ -125,6 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedFiles.forEach(file => {
             formData.append('files[]', file);
         });
+        
+        formData.append('agreed', 'true');
 
         fetch('/upload', {
             method: 'POST',

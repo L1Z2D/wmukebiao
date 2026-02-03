@@ -21,6 +21,12 @@
                 <p>或者</p>
                 <input type="file" id="file-input" name="files[]" multiple accept=".zip" style="display: none;">
                 <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">选择ZIP文件</button>
+                <div class="terms-checkbox-container">
+                    <input type="checkbox" id="terms-checkbox">
+                    <label for="terms-checkbox" class="terms-hint">
+                        我已阅读并同意 <a href="https://github.com/pkx07/wmukebiao/blob/main/TERMS_OF_SERVICE.md" target="_blank">服务协议</a> 与 <a href="https://github.com/pkx07/wmukebiao/blob/main/PRIVACY_POLICY.md" target="_blank">隐私政策</a>
+                    </label>
+                </div>
                 <p class="hint">支持多文件上传，仅限 .zip 格式</p>
             </div>
 
