@@ -36,6 +36,8 @@
  
 https://github.com/user-attachments/assets/7608db17-4091-417b-ba97-658158900253
 
+你也可以直接获取包含考试信息的 Excel 文件（.xlsx）。在教务系统中打开“考试信息查询”界面，全选你需要的考试日程，点击右上角“导出”按钮，即可下载包含考试时间、地点、考试类型等信息的 Excel 文件。
+
 
 ### 第二步：上传转换
 1. 打开本工具官网：[https://kebiao.ipkx.tech/](https://kebiao.ipkx.tech/)。
