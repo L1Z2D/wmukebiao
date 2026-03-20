@@ -75,10 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function handleFiles(files) {
-        const newFiles = Array.from(files).filter(file => file.name.toLowerCase().endsWith('.zip'));
+        const newFiles = Array.from(files).filter(file => {
+            const name = file.name.toLowerCase();
+            return name.endsWith('.zip') || name.endsWith('.xlsx') || name.endsWith('.xls');
+        });
         
         if (newFiles.length === 0 && files.length > 0) {
-            showError("请只上传 .zip 格式的文件");
+            showError("请只上传 .zip 或 Excel 格式的文件");
             return;
         }
 

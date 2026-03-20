@@ -5,7 +5,7 @@ import os
 import logging
 import datetime
 import hashlib
-from generate_ics import process_zip_files
+from generate_ics import process_files
 
 # Configure logging for agreement records
 logging.basicConfig(level=logging.INFO)
@@ -67,17 +67,20 @@ def upload_file():
     if not files or files[0].filename == '':
         return jsonify({'error': 'No selected file'}), 400
         
-    valid_files = []
+    valid_zip_files = []
+    valid_excel_files = []
     for f in files:
         if f.filename.endswith('.zip'):
-            valid_files.append(f)
+            valid_zip_files.append(f)
+        elif f.filename.endswith('.xlsx') or f.filename.endswith('.xls'):
+            valid_excel_files.append(f)
             
-    if not valid_files:
-        return jsonify({'error': 'No valid zip files found'}), 400
+    if not valid_zip_files and not valid_excel_files:
+        return jsonify({'error': 'No valid zip or excel files found'}), 400
         
     try:
         # Process files in memory
-        ics_content = process_zip_files(valid_files)
+        ics_content = process_files(valid_zip_files, valid_excel_files)
         
         # Determine output filename
         output_filename = 'course_schedule.ics'

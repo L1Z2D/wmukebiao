@@ -105,16 +105,20 @@ def get_datetime_range(date_val, start_sec, end_sec):
     
     return dt_start_utc, dt_end_utc
 
-def process_zip_files(zip_files):
+def process_files(zip_files, excel_files=None):
     """
-    Processes a list of zip file paths or file-like objects.
+    Processes a list of zip file paths (for courses) and excel file paths (for exams).
     Returns the ICS content as bytes.
     """
+    if excel_files is None:
+        excel_files = []
+        
     cal = Calendar()
     cal.add('prodid', '-//Course Schedule//github.com/pkx07/wmukebiao//CN')
     cal.add('version', '2.0')
     
     total_events = 0
+    tz = pytz.timezone('Asia/Shanghai')
     
     for zip_file in zip_files:
         try:
@@ -178,14 +182,82 @@ def process_zip_files(zip_files):
             import traceback
             traceback.print_exc()
 
+    import re
+    for excel_file in excel_files:
+        filename = getattr(excel_file, 'filename', str(excel_file))
+        try:
+            df = pd.read_excel(excel_file)
+            
+            # check if it looks like an exam schedule
+            if '考试时间' not in df.columns or '课程名称' not in df.columns:
+                print(f"  Skipping {filename}, missing required columns.")
+                continue
+                
+            for idx, row in df.iterrows():
+                if pd.isna(row.get('考试时间')):
+                    continue
+                
+                time_str = str(row['考试时间']).strip()
+                match = re.match(r'(\d{4}-\d{2}-\d{2})\(([\d:]+)-([\d:]+)\)', time_str)
+                if not match:
+                    continue
+                    
+                date_str, start_time_str, end_time_str = match.groups()
+                date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+                start_h, start_m = map(int, start_time_str.split(':'))
+                end_h, end_m = map(int, end_time_str.split(':'))
+                
+                dt_start = datetime.combine(date_obj, datetime.min.time()).replace(hour=start_h, minute=start_m)
+                dt_end = datetime.combine(date_obj, datetime.min.time()).replace(hour=end_h, minute=end_m)
+                
+                dt_start = tz.localize(dt_start).astimezone(pytz.utc)
+                dt_end = tz.localize(dt_end).astimezone(pytz.utc)
+                
+                event = Event()
+                course_name = row.get('课程名称', 'Unknown Exam')
+                if pd.isna(course_name): course_name = "Unknown Exam"
+                event.add('summary', f"[考试] {course_name}")
+                
+                loc = row.get('考试地点', '')
+                if pd.notna(loc):
+                    event.add('location', str(loc))
+                    
+                desc_parts = []
+                if pd.notna(row.get('考试名称')):
+                    desc_parts.append(f"考试名称：{row['考试名称']}")
+                if pd.notna(row.get('考试校区')):
+                    desc_parts.append(f"考试校区：{row['考试校区']}")
+                if pd.notna(row.get('考试方式')):
+                    desc_parts.append(f"考试方式：{row['考试方式']}")
+                if pd.notna(row.get('开课学院')):
+                    desc_parts.append(f"开课学院：{row['开课学院']}")
+                if pd.notna(row.get('备注')):
+                    desc_parts.append(f"备注：{row['备注']}")
+                    
+                if desc_parts:
+                    event.add('description', "\n".join(desc_parts))
+                    
+                event.add('dtstart', dt_start)
+                event.add('dtend', dt_end)
+                event.add('dtstamp', datetime.now(pytz.utc))
+                
+                cal.add_component(event)
+                total_events += 1
+                
+        except Exception as e:
+            print(f"  Error processing excel: {e}")
+            import traceback
+            traceback.print_exc()
+
     print(f"Total events created: {total_events}")
     return cal.to_ical()
 
 def main():
     zip_files = glob.glob('*.zip')
-    print(f"Found {len(zip_files)} zip files.")
+    excel_files = glob.glob('*.xlsx') + glob.glob('*.xls')
+    print(f"Found {len(zip_files)} zip files and {len(excel_files)} excel files.")
     
-    ics_content = process_zip_files(zip_files)
+    ics_content = process_files(zip_files, excel_files)
     
     with open(OUTPUT_FILE, 'wb') as f:
         f.write(ics_content)
